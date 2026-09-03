@@ -3,174 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="1.618 - Premium Skincare Collection. Discover our golden ratio skincare products for timeless beauty.">
-    <title>1.618 - Premium Skincare Collection</title>
+    <meta name="description" content="1.618 Skincare - Korean skincare built on the golden ratio. Toner, cream, ampoule and pore care, available on Amazon US.">
+    <title>1.618 - Skincare in the Golden Ratio</title>
+    <link rel="preload" as="image" href="img/hero-model.webp">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Announcement -->
+    <div class="announce">Now shipping in the US &mdash; find us on Amazon</div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <div class="logo"><img src="1.618.png" alt="1.618 Logo" class="logo-image"></div>
+            <a class="logo" href="#home"><img src="1.618.png" alt="1.618" class="logo-image"></a>
             <ul class="nav-menu">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="#about">Brand</a></li>
                 <li><a href="#products">Products</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="nav-right">
+                <a class="lang-switch" href="https://www.1618cosmetic.com/" title="한국어 사이트로 이동">KO</a>
+                <div class="hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section id="home" class="hero">
-        <div class="container">
+        <div class="hero-media">
+            <picture>
+                <source media="(max-width: 768px)" srcset="img/hero-model-m.webp">
+                <img src="img/hero-model.webp" alt="1.618 skincare">
+            </picture>
+        </div>
+        <div class="container hero-inner">
             <div class="hero-content">
-                <h1>1.618 Skincare Collection</h1>
-                <p>Experience the golden ratio of beauty - premium skincare for timeless elegance</p>
-                <a href="https://www.amazon.com/stores/GoldenRatio1618Cosmetic/page/2E637E4C-FEA2-4756-B501-0C4CF772875E?lp_asin=B08CGNKFZ3&ref_=ast_bln&store_ref=bl_ast_dp_brandlogo_sto" target="_blank" class="cta-button"><i class="fab fa-amazon" style="margin-right:8px"></i>Shop on Amazon</a>
+                <p class="eyebrow">#1.618 GOLDEN RATIO</p>
+                <h1>Everyday skincare,<br>built on the golden ratio</h1>
+                <p class="hero-sub">Ingredients skin likes, blended in the proportion that lets them work together.<br>Refined until it became the one bottle you reach for every day.</p>
+                <a href="https://www.amazon.com/stores/GoldenRatio1618Cosmetic/page/2E637E4C-FEA2-4756-B501-0C4CF772875E?lp_asin=B08CGNKFZ3&amp;ref_=ast_bln&amp;store_ref=bl_ast_dp_brandlogo_sto" target="_blank" rel="noopener" class="cta-button">Shop on Amazon <span class="plus">+</span></a>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
+    <!-- Ratio strip -->
+    <section class="ratio-strip">
         <div class="container">
-            <h2>About 1.618</h2>
-            <div class="about-grid">
-                <div class="about-card">
-                    <div class="icon"><i class="fas fa-moon"></i></div>
-                    <h3>Our Mission</h3>
-                    <p>We are committed to creating skincare products inspired by the golden ratio - perfect proportions of nature's finest ingredients for timeless beauty.</p>
+            <div class="ratio-grid">
+                <div class="ratio-item">
+                    <span class="ratio-num">01</span>
+                    <h3>What goes in</h3>
+                    <p>Only raw materials the skin actually responds to &mdash; hyaluronic acid, tea tree, volcanic clay, artemisia, birch sap.</p>
                 </div>
-                <div class="about-card">
-                    <div class="icon"><i class="fas fa-gem"></i></div>
-                    <h3>Our Philosophy</h3>
-                    <p>The golden ratio 1.618 represents perfection in nature. We apply this principle to every product, creating the perfect balance of efficacy and luxury.</p>
+                <div class="ratio-item">
+                    <span class="ratio-num">02</span>
+                    <h3>What stays out</h3>
+                    <p>Everything that was in the formula for the label rather than for the skin gets taken back out.</p>
                 </div>
-                <div class="about-card">
-                    <div class="icon"><i class="fas fa-leaf"></i></div>
-                    <h3>Why Choose 1.618?</h3>
-                    <p>Premium quality, scientifically formulated skincare with natural botanical ingredients. Dermatologist-tested and designed for all skin types.</p>
+                <div class="ratio-item">
+                    <span class="ratio-num">03</span>
+                    <h3>What is left</h3>
+                    <p>The balance between the two. That balance is the product, and it is where the name comes from.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Products Section -->
+    <!-- Products -->
     <section id="products" class="products">
         <div class="container">
-            <h2>Our Skincare Collection</h2>
+            <p class="eyebrow dark">OUR COLLECTION</p>
+            <h2>Eight steps, one ratio</h2>
             <div class="products-grid">
-                <a href="샐몬상세/salmon.html" class="product-link">
-                    <div class="product-card">
-                        <div class="product-image"><img src="salmon.jpg" alt="Salmon Firming Sleeping Mask"></div>
-                        <h3>Salmon Firming Sleeping Mask</h3>
-                        <p class="product-category">Night Care</p>
-                        <p class="product-description">Overnight mask for hydration and firming care.</p>
-                        <div class="product-price">$21.90</div>
-                        <span class="view-details">View Details</span>
-                    </div>
-                </a>
-                <a href="화산송이_영문상세/blackhead.html" class="product-link">
-                    <div class="product-card">
-                        <div class="product-image"><img src="blackhead.jpg" alt="Volcanic Clay Blackhead Mask"></div>
-                        <h3>Volcanic Clay Blackhead Mask</h3>
-                        <p class="product-category">Wash Off Pack</p>
-                        <p class="product-description">Clay mask for pore and sebum care.</p>
-                        <div class="product-price">$21.90</div>
-                        <span class="view-details">View Details</span>
-                    </div>
-                </a>
                 <a href="히알토너 상세/toner.html" class="product-link">
                     <div class="product-card">
-                        <div class="product-image"><img src="toner.jpg" alt="Hyaluronic Acid Ampoule Toner"></div>
-                        <h3>Hyaluronic Acid Ampoule Toner</h3>
+                        <div class="product-image"><img src="img/p-toner.webp" alt="Hyaluronic Acid Ampoule Toner" loading="lazy"></div>
                         <p class="product-category">Toner</p>
+                        <h3>Hyaluronic Acid Ampoule Toner</h3>
                         <p class="product-description">Hydrating toner with ampoule-level moisture care.</p>
                         <div class="product-price">$22.90</div>
-                        <span class="view-details">View Details</span>
-                    </div>
-                </a>
-                <a href="링클케어상세_영문/wrinkle.html" class="product-link">
-                    <div class="product-card">
-                        <div class="product-image"><img src="wrinkle.jpg" alt="Intensive Wrinkle Care Cream"></div>
-                        <h3>Intensive Wrinkle Care Cream</h3>
-                        <p class="product-category">Cream</p>
-                        <p class="product-description">Anti-aging cream for firm and nourished skin.</p>
-                        <div class="product-price">$22.90</div>
-                        <span class="view-details">View Details</span>
-                    </div>
-                </a>
-                <a href="쑥에센스상세/essence.html" class="product-link">
-                    <div class="product-card">
-                        <div class="product-image"><img src="essence.jpg" alt="Artemisia Capillaris Essence"></div>
-                        <h3>Artemisia Capillaris Essence</h3>
-                        <p class="product-category">Essence</p>
-                        <p class="product-description">Soothing essence for sensitive skin hydration.</p>
-                        <div class="product-price">$22.90</div>
-                        <span class="view-details">View Details</span>
-                    </div>
-                </a>
-                <a href="미스트상세/mist.html" class="product-link">
-                    <div class="product-card">
-                        <div class="product-image"><img src="mist.jpg" alt="Betula Calming Dual Mist"></div>
-                        <h3>Betula Calming Dual Mist</h3>
-                        <p class="product-category">Mist</p>
-                        <p class="product-description">Dual mist for soothing and moisture balance.</p>
-                        <div class="product-price">$22.90</div>
-                        <span class="view-details">View Details</span>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
                     </div>
                 </a>
                 <a href="티트리상세/teatree.html" class="product-link">
                     <div class="product-card">
-                        <div class="product-image"><img src="teatree.jpg" alt="Tea Tree Clearing Foam Cleanser"></div>
-                        <h3>Tea Tree Clearing Foam Cleanser</h3>
+                        <div class="product-image"><img src="img/p-teatree.webp" alt="Tea Tree Clearing Foam Cleanser" loading="lazy"></div>
                         <p class="product-category">Cleanser</p>
+                        <h3>Tea Tree Clearing Foam Cleanser</h3>
                         <p class="product-description">Gentle foam cleanser for oily and sensitive skin.</p>
                         <div class="product-price">$21.90</div>
-                        <span class="view-details">View Details</span>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
+                    </div>
+                </a>
+                <a href="화산송이_영문상세/blackhead.html" class="product-link">
+                    <div class="product-card">
+                        <div class="product-image"><img src="img/p-blackhead.webp" alt="Volcanic Clay Blackhead Mask" loading="lazy"></div>
+                        <p class="product-category">Wash Off Pack</p>
+                        <h3>Volcanic Clay Blackhead Mask</h3>
+                        <p class="product-description">Clay mask for pore and sebum care.</p>
+                        <div class="product-price">$21.90</div>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
+                    </div>
+                </a>
+                <a href="샐몬상세/salmon.html" class="product-link">
+                    <div class="product-card">
+                        <div class="product-image"><img src="img/p-salmon.webp" alt="Salmon Firming Sleeping Mask" loading="lazy"></div>
+                        <p class="product-category">Night Care</p>
+                        <h3>Salmon Firming Sleeping Mask</h3>
+                        <p class="product-description">Overnight mask for hydration and firming care.</p>
+                        <div class="product-price">$21.90</div>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
+                    </div>
+                </a>
+                <a href="링클케어상세_영문/wrinkle.html" class="product-link">
+                    <div class="product-card">
+                        <div class="product-image"><img src="img/p-wrinkle.webp" alt="Intensive Wrinkle Care Cream" loading="lazy"></div>
+                        <p class="product-category">Cream</p>
+                        <h3>Intensive Wrinkle Care Cream</h3>
+                        <p class="product-description">Anti-aging cream for firm and nourished skin.</p>
+                        <div class="product-price">$22.90</div>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
+                    </div>
+                </a>
+                <a href="쑥에센스상세/essence.html" class="product-link">
+                    <div class="product-card">
+                        <div class="product-image"><img src="img/p-essence.webp" alt="Artemisia Capillaris Essence" loading="lazy"></div>
+                        <p class="product-category">Essence</p>
+                        <h3>Artemisia Capillaris Essence</h3>
+                        <p class="product-description">Soothing essence for sensitive skin hydration.</p>
+                        <div class="product-price">$22.90</div>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
+                    </div>
+                </a>
+                <a href="미스트상세/mist.html" class="product-link">
+                    <div class="product-card">
+                        <div class="product-image"><img src="img/p-mist.webp" alt="Betula Calming Dual Mist" loading="lazy"></div>
+                        <p class="product-category">Mist</p>
+                        <h3>Betula Calming Dual Mist</h3>
+                        <p class="product-description">Dual mist for soothing and moisture balance.</p>
+                        <div class="product-price">$22.90</div>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
                     </div>
                 </a>
                 <a href="편백수모공앰플상세/hinoki.html" class="product-link">
                     <div class="product-card">
-                        <div class="product-image"><img src="hinoki.png" alt="Hinoki Pore Tightening Ampoule"></div>
-                        <h3>Hinoki Pore Tightening Ampoule</h3>
+                        <div class="product-image"><img src="img/p-hinoki.webp" alt="Hinoki Pore Tightening Ampoule" loading="lazy"></div>
                         <p class="product-category">Ampoule</p>
+                        <h3>Hinoki Pore Tightening Ampoule</h3>
                         <p class="product-description">Pore care ampoule for smoother skin texture.</p>
                         <div class="product-price">$22.90</div>
-                        <span class="view-details">View Details</span>
+                        <span class="view-details">View Details <span class="plus">+</span></span>
                     </div>
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand story -->
+    <section id="about" class="split">
+        <div class="split-media"><img src="img/story-model.webp" alt="1.618 brand" loading="lazy"></div>
+        <div class="split-text">
+            <p class="eyebrow dark">OUR BRAND STORY</p>
+            <h2>The most beautiful<br>proportion is 1.618</h2>
+            <p>Nature calls 1.618 its most stable proportion. We look for that same proportion in skin.</p>
+            <p>What to put in, what to leave out, and only the balance between the two &mdash; that is how one bottle for daily use gets made.</p>
+            <a href="#products" class="outline-button">See the collection <span class="plus">+</span></a>
+        </div>
+    </section>
+
+    <!-- Formula -->
+    <section class="formula">
+        <div class="container">
+            <div class="formula-inner">
+                <div class="formula-text">
+                    <p class="eyebrow">#GOLDEN RATIO FORMULA</p>
+                    <h2>Good ingredients,<br>blended in ratio</h2>
+                    <p>We pick only the raw materials skin responds to, then set them in the proportion where each one brings out the others.</p>
+                    <a href="https://www.amazon.com/stores/GoldenRatio1618Cosmetic/page/2E637E4C-FEA2-4756-B501-0C4CF772875E?lp_asin=B08CGNKFZ3&amp;ref_=ast_bln&amp;store_ref=bl_ast_dp_brandlogo_sto" target="_blank" rel="noopener" class="outline-button light">Shop on Amazon <span class="plus">+</span></a>
+                </div>
+                <div class="formula-media"><img src="img/formula-2.webp" alt="1.618 Betula Calming Dual Mist" loading="lazy"></div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer id="contact" class="footer">
         <div class="footer-content">
             <div class="footer-logo">1.618</div>
-            <p>Discover the beauty of natural skincare with our premium collection of botanical-based products.</p>
-            <p>For inquiries, please contact us at: <a href="mailto:kim_1212@naver.com" style="color: #667eea; text-decoration: none;">kim_1212@naver.com</a></p>
+            <p>Korean skincare in the golden ratio. Available on Amazon US.</p>
+            <p>For inquiries: <a href="mailto:kim_1212@naver.com">kim_1212@naver.com</a></p>
             <div class="social-links">
-                <a href="https://www.instagram.com/1.618_cosmetic_US" target="_blank" title="Follow us on Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.tiktok.com/@1.618_us" target="_blank" title="Follow us on TikTok">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-                <a href="https://www.youtube.com/@1.618_US" target="_blank" title="Subscribe to our YouTube">
-                    <i class="fab fa-youtube"></i>
-                </a>
+                <a href="https://www.instagram.com/1.618_cosmetic_US" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@1.618_us" target="_blank" rel="noopener" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.youtube.com/@1.618_US" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
+            <p class="footer-lang"><a href="https://www.1618cosmetic.com/">한국어 사이트 &rarr;</a></p>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 1.618 Skincare. All rights reserved.</p>
+            <p>&copy; 2026 1.618 Skincare. All rights reserved.</p>
         </div>
     </footer>
 

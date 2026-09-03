@@ -1,121 +1,42 @@
-// Navbar Scroll Effect
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
+// Navbar shadow on scroll
+const navbar = document.querySelector('.navbar');
+const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 10);
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
 
-// Mobile Menu Toggle
+// Mobile menu
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
-
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
+if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
+    navMenu.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') navMenu.classList.remove('active');
     });
 }
 
-// Close menu when a link is clicked
-const navLinks = document.querySelectorAll('.nav-menu a');
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-    });
-});
-
-// Smooth Scroll to Section
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+// Reveal sections on scroll
+const targets = document.querySelectorAll('.ratio-item, .product-card, .split-text, .formula-text');
+if (targets.length) {
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+    }, { rootMargin: '0px 0px -60px 0px' });
+    targets.forEach((el) => { el.classList.add('reveal'); io.observe(el); });
 }
 
-// Form Submission Handler
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Get form values
-        const name = contactForm.querySelector('input[type="text"]').value;
-        const email = contactForm.querySelector('input[type="email"]').value;
-        const message = contactForm.querySelector('textarea').value;
-        
-        // Simple validation
-        if (name && email && message) {
-            // Here you would typically send data to a server
-            alert('Thank you for your message! We will get back to you soon.');
-            contactForm.reset();
-        } else {
-            alert('Please fill in all fields.');
-        }
-    });
+// Highlight the nav link of the section in view (in-page anchors only)
+const anchors = [...document.querySelectorAll('.nav-menu a[href^="#"]')];
+const sections = anchors
+    .map((a) => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+if (sections.length) {
+    const spy = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            anchors.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+        });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach((s) => spy.observe(s));
 }
-
-// Scroll Animation - Add animation to elements as they come into view
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe all cards for animation
-document.querySelectorAll('.about-card, .product-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'all 0.3s ease';
-    observer.observe(card);
-});
-
-// Active Navigation Link Highlight
-window.addEventListener('scroll', () => {
-    let current = '';
-    const sections = document.querySelectorAll('section');
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (pageYOffset >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Add CSS for active link
-const style = document.createElement('style');
-style.textContent = `
-    .nav-menu a.active {
-        color: #3498db;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 5px;
-    }
-`;
-document.head.appendChild(style);
-
-// Navbar background on scroll
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = '0 5px 20px rgba(0,0,0,0.2)';
-    } else {
-        navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    }
-});
