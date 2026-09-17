@@ -242,6 +242,14 @@ h2 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); }
 .product-gallery { max-width: 860px; margin: 0 auto; }
 .product-gallery img { width: 100%; }
 
+.product-facts { max-width: 860px; margin: 0 auto 90px; display: grid; gap: 36px; }
+.product-facts h2 { font-size: 1.25rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+.product-facts p, .product-facts li { color: var(--ink-soft); line-height: 1.7; }
+.product-facts li { margin-bottom: 6px; }
+.product-facts strong { color: var(--ink); }
+.product-facts ul { padding-left: 18px; }
+.product-facts .small { font-size: 0.88rem; }
+
 /* ---------- Footer ---------- */
 .footer { background: var(--ink); color: #fff; padding: 84px 28px 0; }
 .footer-content { max-width: 620px; margin: 0 auto; text-align: center; }
