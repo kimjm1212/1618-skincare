@@ -167,6 +167,59 @@ PAGES = [
                   "Contains spicules, so you may feel a tingling sensation. How strong it feels varies from person to person."]),
 ]
 
+# 제품별 자주 묻는 질문 — 답은 공식 사용법, 전성분, 주의사항에 있는 사실로만
+FAQ = {
+    "toner": [
+        ("When do I use the toner?", "Right after cleansing, as the first step. Apply it with a cotton pad or your palm."),
+        ("Can I use it as a toner pack?", "Yes. Soak cotton pads with the toner and place them on dry areas."),
+        ("Which forms of hyaluronic acid are in it?", "Six: " + ", ".join(HA6).lower() + "."),
+    ],
+    "cleanser": [
+        ("How do I use the cleanser?", "Work a small amount into a rich lather, massage it over the face, then rinse with lukewarm water."),
+        ("What is the cleansing agent?", "Sodium lauroyl glutamate, an amino acid-based cleansing agent."),
+        ("Can children use it?", "Do not use it on children aged 3 or under."),
+    ],
+    "porepack": [
+        ("How long do I leave the mask on?", "About 10 minutes, until the mask has dried. Then rinse it off with lukewarm water."),
+        ("Where should I not apply it?", "Avoid the eye and mouth areas."),
+        ("Which clays are in it?", "Kaolin and bentonite, together with volcanic ash."),
+    ],
+    "mask": [
+        ("Do I need to rinse it off?", "No. It is a leave-on overnight mask, so there is no need to wash it off in the morning."),
+        ("When do I apply it?", "As the last step of your evening routine, right before bed."),
+        ("What is the key ingredient?", "Salmon egg extract, together with two peptides, niacinamide, adenosine and ceramide NP."),
+    ],
+    "cream": [
+        ("Is there real gold in the cream?", "Yes. Gold (CI 77480) is in the ingredient list."),
+        ("What is GABA?", "GABA is aminobutyric acid. It appears in the ingredient list as Aminobutyric Acid."),
+        ("How do I apply it?", "Apply an appropriate amount to the whole face and any areas with wrinkle concerns, then spread evenly."),
+    ],
+    "essence": [
+        ("How many ingredients does it have?", "Four: water, pentylene glycol, artemisia capillaris extract and caprylyl glycol."),
+        ("Does it contain fragrance?", "No. There is no fragrance in the ingredient list."),
+        ("Can I use it as a cotton pad pack?", "Yes. Soak a cotton pad with the essence and leave it on the face for 5 to 10 minutes."),
+    ],
+    "mist": [
+        ("Why do I need to shake it?", "It has two layers, birch sap water and sunflower seed oil. Shaking mixes them before you spray."),
+        ("When can I use it?", "After cleansing as part of your routine, or any time during the day."),
+        ("Can children use it?", "Do not use it on children aged 3 or under."),
+    ],
+    "poreampoule": [
+        ("Why does it tingle?", "It contains spicules (hydrolyzed sponge), which can cause a tingling feeling. How strong it feels varies from person to person."),
+        ("How much hinoki water is in it?", "98,000 ppm of Chamaecyparis obtusa (hinoki) water."),
+        ("Should I do a patch test?", "If you have sensitive skin, test it on a small area first. Keep it away from the eyes."),
+    ],
+}
+COMMON_FAQ = [
+    ("Where can I buy it in the US?", "On Amazon US. The Buy on Amazon button on this page opens the product listing."),
+    ("Where is it made?", "In Korea."),
+    ("How long can I use it after opening?", "Use it within 12 months after opening."),
+]
+# 루틴 순서(묽은 것 → 진한 것). 설명은 각 제품의 공식 사용법(how)을 그대로 쓴다
+ROUTINE = [("Cleanse", "cleanser"), ("Wash-off clay mask, after cleansing", "porepack"), ("Tone", "toner"),
+           ("Essence", "essence"), ("Ampoule", "poreampoule"), ("Cream", "cream"),
+           ("Overnight mask, last step of the evening", "mask")]
+
 
 def inci(p):
     # "1,2-Hexanediol" 안의 쉼표는 구분자가 아니다 → 쉼표+공백으로만 자른다
@@ -180,7 +233,9 @@ def check(p):
             assert t in names, f"{p['sku']}: '{t}' 가 전성분에 없음"
     if "No added fragrance" in p["benefits"]:
         assert "Fragrance" not in names, f"{p['sku']}: 향료가 들어있는데 무향 표기"
-    text = " ".join([p["desc"], *p["benefits"], p["how"]]).lower()
+    text = " ".join([p["desc"], *p["benefits"], p["how"], *sum(map(list, FAQ[p["sku"]]), [])]).lower()
+    if any("no fragrance" in a.lower() for _, a in FAQ[p["sku"]]):
+        assert "Fragrance" not in names, f"{p['sku']}: 향료가 들어있는데 FAQ 에 무향"
     for bad in ("acne", "antibacterial", "pdrn", "whiten", "lighten", "blemish", "morning wash"):
         assert bad not in text, f"{p['sku']}: 금지 표현 '{bad}'"
 
@@ -200,6 +255,10 @@ def key_item(label, terms):
     if [label.lower()] == [x.lower() for x in terms]:
         return f"<strong>{e(label)}</strong>"
     return f"<strong>{e(label)}</strong>: {e(', '.join(terms))}"
+
+
+def faqs(p):
+    return FAQ[p["sku"]] + COMMON_FAQ
 
 
 def info_block(p):
@@ -237,6 +296,11 @@ def info_block(p):
                     <p class="small">{e(", ".join(inci(p)))}</p>
                 </div>
                 <div>
+                    <h2>FAQ</h2>
+{chr(10).join(f"                    <h3>{e(q)}</h3>{chr(10)}                    <p>{e(a)}</p>" for q, a in faqs(p))}
+                    <p class="small"><a href="../routine.html">See where it fits in the 1.618 routine</a></p>
+                </div>
+                <div>
                     <h2>Caution</h2>
                     <ul class="small">
 {chr(10).join(f"                        <li>{e(c)}</li>" for c in p["caution"] + CAUTION)}
@@ -248,8 +312,7 @@ def info_block(p):
 
 
 def jsonld(p):
-    data = {
-        "@context": "https://schema.org",
+    product = {
         "@type": "Product",
         "name": f"1.618 {p['name']}",
         "brand": {"@type": "Brand", "name": "1.618"},
@@ -264,6 +327,9 @@ def jsonld(p):
         "offers": {"@type": "Offer", "url": amazon(p), "price": PRICE, "priceCurrency": "USD",
                    "availability": "https://schema.org/InStock"},
     }
+    faq = {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs(p)]}
+    data = {"@context": "https://schema.org", "@graph": [product, faq]}
     body = json.dumps(data, ensure_ascii=False, indent=2).replace("\n", "\n    ")
     return f'<script type="application/ld+json">\n    {body}\n    </script>\n    '
 
@@ -295,6 +361,10 @@ def build_index():
     f = SITE / "index.html"
     t = re.sub(r'<div class="product-price">\$[\d.]+</div>', f'<div class="product-price">${PRICE}</div>',
                f.read_text(encoding="utf-8"))
+    if 'href="routine.html"' not in t:
+        contact = '<li><a href="#contact">Contact</a></li>'
+        assert t.count(contact) == 1
+        t = t.replace(contact, '<li><a href="routine.html">Routine</a></li>\n                ' + contact)
     f.write_text(t, encoding="utf-8", newline="\n")
 
 
@@ -313,6 +383,11 @@ def build_llms():
                      f"Buy on Amazon: {amazon(p)}")
     lines += [
         "",
+        "## Guides",
+        "",
+        f"- [The 1.618 routine, step by step]({BASE}routine.html): which 1.618 product goes where in a skincare "
+        "routine, with each product's official directions.",
+        "",
         "## Where to buy",
         "",
         "- Amazon US brand store: https://www.amazon.com/stores/GoldenRatio1618Cosmetic/page/2E637E4C-FEA2-4756-B501-0C4CF772875E",
@@ -330,9 +405,102 @@ def build_llms():
 
 
 def build_sitemap():
-    f = SITE / "sitemap.xml"
-    f.write_text(re.sub(r"<lastmod>[^<]+</lastmod>", f"<lastmod>{date.today()}</lastmod>",
-                        f.read_text(encoding="utf-8")), encoding="utf-8", newline="\n")
+    rows = [(BASE, "1.0"), (BASE + "routine.html", "0.8")] + [(url(p), "0.8") for p in PAGES]
+    body = "".join(f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{date.today()}</lastmod>\n"
+                   f"    <priority>{pr}</priority>\n  </url>\n" for u, pr in rows)
+    (SITE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                                      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                                      f"{body}</urlset>\n", encoding="utf-8", newline="\n")
+
+
+def build_routine():
+    by = {p["sku"]: p for p in PAGES}
+    steps = "\n".join(
+        f'                <li>\n'
+        f'                    <h2>{e(step)}</h2>\n'
+        f'                    <p><a href="{quote(by[s]["path"])}"><strong>1.618 {e(by[s]["name"])}</strong></a>, {e(by[s]["size"])}</p>\n'
+        f'                    <p>{e(by[s]["how"])}</p>\n'
+        f'                    <p class="small"><a href="{amazon(by[s])}" target="_blank" rel="noopener">Buy on Amazon</a></p>\n'
+        f'                </li>' for step, s in ROUTINE)
+    mist = by["mist"]
+    title = "The 1.618 Skincare Routine, Step by Step | 1.618 Korean Skincare"
+    desc = ("Which 1.618 Korean skincare product goes where: cleanser, clay mask, toner, essence, ampoule, "
+            "cream and overnight mask, with each product's official directions.")
+    page = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="description" content="{e(desc)}">
+    <title>{e(title)}</title>
+    <link rel="canonical" href="{BASE}routine.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="1.618 Skincare">
+    <meta property="og:title" content="{e(title)}">
+    <meta property="og:description" content="{e(desc)}">
+    <meta property="og:url" content="{BASE}routine.html">
+    <meta property="og:image" content="{BASE}og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- build_product_seo.py 가 만드는 파일. 직접 고치지 말 것 -->
+    <nav class="navbar">
+        <div class="container">
+            <a class="logo" href="index.html"><img src="1.618.png" alt="1.618" class="logo-image"></a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">Brand</a></li>
+                <li><a href="index.html#products">Products</a></li>
+                <li><a href="routine.html" class="active">Routine</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <a class="lang-switch" href="https://www.1618cosmetic.com/" title="한국어 사이트로 이동">KO</a>
+                <div class="hamburger" aria-label="Menu"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="product-detail">
+        <div class="container">
+            <div class="product-facts">
+                <div>
+                    <h1>The 1.618 routine, step by step</h1>
+                    <p>Go from the thinnest texture to the richest. Use only the steps you need, and follow each product's own directions.</p>
+                </div>
+                <ol class="routine">
+{steps}
+                </ol>
+                <div>
+                    <h2>Any time: 1.618 {e(mist["name"])}</h2>
+                    <p>{e(mist["how"])}</p>
+                    <p class="small"><a href="{quote(mist["path"])}">Product details</a>, <a href="{amazon(mist)}" target="_blank" rel="noopener">Buy on Amazon</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">1.618</div>
+            <p>Korean skincare in the golden ratio. Available on Amazon US.</p>
+            <p>For inquiries: <a href="mailto:kim_1212@naver.com">kim_1212@naver.com</a></p>
+            <p class="footer-lang"><a href="https://www.1618cosmetic.com/">한국어 사이트 &rarr;</a></p>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 1.618 Skincare. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
+'''
+    (SITE / "routine.html").write_text(page, encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":
@@ -343,6 +511,7 @@ if __name__ == "__main__":
         build_page(p)
         print("OK", p["path"])
     build_index()
+    build_routine()
     build_llms()
     build_sitemap()
-    print("OK index.html / llms.txt / sitemap.xml")
+    print("OK index.html / routine.html / llms.txt / sitemap.xml")

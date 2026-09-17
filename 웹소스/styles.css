@@ -249,6 +249,9 @@ h2 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); }
 .product-facts strong { color: var(--ink); }
 .product-facts ul { padding-left: 18px; }
 .product-facts .small { font-size: 0.88rem; }
+.product-facts h3 { font-size: 1rem; margin: 16px 0 4px; }
+.routine { padding-left: 22px; display: grid; gap: 30px; }
+.routine li::marker { font-weight: 700; color: var(--gold-deep); }
 
 /* ---------- Footer ---------- */
 .footer { background: var(--ink); color: #fff; padding: 84px 28px 0; }
