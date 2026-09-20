@@ -9,6 +9,7 @@ const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 if (hamburger && navMenu) {
     hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
+    hamburger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hamburger.click(); } });
     navMenu.addEventListener('click', (e) => {
         if (e.target.tagName === 'A') navMenu.classList.remove('active');
     });
