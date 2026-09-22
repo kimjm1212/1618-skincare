@@ -26,6 +26,15 @@ if (targets.length) {
     targets.forEach((el) => { el.classList.add('reveal'); io.observe(el); });
 }
 
+// Brand film: start the YouTube embed only when it scrolls into view (keeps first load light)
+const film = document.querySelector('.brand-film iframe[data-src]');
+if (film) {
+    const fio = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { film.src = film.dataset.src; fio.disconnect(); }
+    }, { rootMargin: '200px 0px' });
+    fio.observe(film);
+}
+
 // Highlight the nav link of the section in view (in-page anchors only)
 const anchors = [...document.querySelectorAll('.nav-menu a[href^="#"]')];
 const sections = anchors
