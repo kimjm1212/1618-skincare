@@ -251,6 +251,16 @@ def amazon(p):
     return f"https://www.amazon.com/dp/{p['asin']}"
 
 
+# Amazon Attribution 'Blogpost - Other'(11) 태그 — 영문몰 경유 아마존 구매를 측정 + Brand Referral Bonus.
+# GET /attribution/tags/nonMacroTemplateTag(advertiser 580189255563782393) 로 받은 값. 캠페인=en_site, 광고그룹=페이지
+ATTR = "maas=maas_adg_api_580189255563782393_static_11_658&ref_=aa_maas&tag=maas&aa_campaignid=en_site"
+
+
+def buy(p, page):
+    """화면의 Buy 버튼 전용. JSON-LD·llms.txt 는 깨끗한 amazon() 그대로 둔다."""
+    return html.escape(f"{amazon(p)}?{ATTR}&aa_adgroupid={page}&aa_creativeid={p['sku']}")
+
+
 def key_item(label, terms):
     if [label.lower()] == [x.lower() for x in terms]:
         return f"<strong>{e(label)}</strong>"
@@ -276,7 +286,7 @@ def info_block(p):
                         </ul>
                     </div>
 
-                    <a href="{amazon(p)}" target="_blank" rel="noopener" class="amazon-button-large">Buy on Amazon</a>
+                    <a href="{buy(p, 'product')}" target="_blank" rel="noopener" class="amazon-button-large">Buy on Amazon</a>
                 </div>
             </div>
 
@@ -420,7 +430,7 @@ def build_routine():
         f'                    <h2>{e(step)}</h2>\n'
         f'                    <p><a href="{quote(by[s]["path"])}"><strong>1.618 {e(by[s]["name"])}</strong></a>, {e(by[s]["size"])}</p>\n'
         f'                    <p>{e(by[s]["how"])}</p>\n'
-        f'                    <p class="small"><a href="{amazon(by[s])}" target="_blank" rel="noopener">Buy on Amazon</a></p>\n'
+        f'                    <p class="small"><a href="{buy(by[s], "routine")}" target="_blank" rel="noopener">Buy on Amazon</a></p>\n'
         f'                </li>' for step, s in ROUTINE)
     mist = by["mist"]
     title = "The 1.618 Skincare Routine, Step by Step | 1.618 Korean Skincare"
@@ -479,7 +489,7 @@ def build_routine():
                 <div>
                     <h2>Any time: 1.618 {e(mist["name"])}</h2>
                     <p>{e(mist["how"])}</p>
-                    <p class="small"><a href="{quote(mist["path"])}">Product details</a>, <a href="{amazon(mist)}" target="_blank" rel="noopener">Buy on Amazon</a></p>
+                    <p class="small"><a href="{quote(mist["path"])}">Product details</a>, <a href="{buy(mist, 'routine')}" target="_blank" rel="noopener">Buy on Amazon</a></p>
                 </div>
             </div>
         </div>
