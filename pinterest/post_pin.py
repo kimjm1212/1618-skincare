@@ -2,9 +2,9 @@
 
     python post_pin.py mask          # 그 핀 하나
     python post_pin.py --next        # 아직 안 올린 것 중 ORDER 순서로 1개
-    python post_pin.py --schedule 2026.10.17   # 남은 것 전부 그날부터 하루 1개씩 Pinterest 예약
+    python post_pin.py --schedule 2026.10.17 [A]   # 그 시안의 남은 것 전부 그날부터 하루 1개씩 Pinterest 예약
 
-이미지 = pins/{VARIANT}_{sku}.png, 제목·설명·링크 = pins.csv. 올린 기록 posted.json(같은 핀 두 번 안 올림).
+이미지 = pins/{시안}_{sku}.png, 제목·설명·링크 = CSV[시안]. 올린 기록 posted.json(같은 핀 두 번 안 올림).
 게시 성공 판정 = 내 프로필 '생성됨' 목록에 새 핀 id 가 생겼는지(버튼 클릭만으로 성공 처리하지 않음).
 """
 import csv
@@ -18,14 +18,15 @@ if hasattr(sys.stdout, "reconfigure"):
 
 HERE = Path(__file__).parent
 LOG = HERE / "posted.json"
-VARIANT = "B"
+CSV = {"B": "pins.csv", "A": "pins_A.csv"}  # 시안별 문구표. 기록 키 = B는 sku, A는 "A_sku"
 PROFILE = "https://kr.pinterest.com/1618cosmetic/_created/"
 BOARD = {"routine": "Korean Skincare Routine", "toner": "Korean Skincare Routine",
          "essence": "Korean Skincare Routine", "poreampoule": "Korean Skincare Routine",
          "mask": "K-Beauty Masks & Cleansers", "porepack": "K-Beauty Masks & Cleansers",
          "cleanser": "K-Beauty Masks & Cleansers",
          "cream": "Anti-Aging Skincare", "mist": "Anti-Aging Skincare"}
-ORDER = ["routine", "mask", "toner", "porepack", "cream", "essence", "cleanser", "poreampoule", "mist"]
+ORDER = {"B": ["routine", "mask", "toner", "porepack", "cream", "essence", "cleanser", "poreampoule", "mist"],
+         "A": ["mask", "toner", "routine", "cream", "porepack", "essence", "cleanser", "poreampoule", "mist"]}
 TOPICS = ["Korean skincare", "Skincare routine"]
 SCHEDULE_TIME = "11:00 AM"  # 한국시간 = 미국 동부 전날 밤 10시. 목록이 30분 단위라 11:11 은 없음
 
@@ -36,10 +37,14 @@ def _pin_ids(pg):
     return {h.split("/")[2] for h in pg.eval_on_selector_all('a[href^="/pin/"]', "as => as.map(a => a.getAttribute('href'))")}
 
 
-def post(sku, at=None):
+def key(sku, variant):
+    return sku if variant == "B" else f"{variant}_{sku}"
+
+
+def post(sku, at=None, variant="B"):
     """at='2026.10.18' 이면 그 날 SCHEDULE_TIME 에 Pinterest 예약 게시(PC 꺼져 있어도 올라감)."""
     from playwright.sync_api import sync_playwright
-    row = {r["image"]: r for r in csv.DictReader(open(HERE / "pins.csv", encoding="utf-8-sig"))}[sku]
+    row = {r["image"]: r for r in csv.DictReader(open(HERE / CSV[variant], encoding="utf-8-sig"))}[sku]
     with sync_playwright() as pw:
         ctx = pw.chromium.connect_over_cdp("http://127.0.0.1:9222").contexts[0]
         pg = ctx.new_page()
@@ -48,7 +53,7 @@ def post(sku, at=None):
             before = _pin_ids(pg)
             pg.goto("https://kr.pinterest.com/pin-creation-tool/", wait_until="commit")
             pg.wait_for_selector("#storyboard-upload-input", state="attached", timeout=30000)
-            pg.set_input_files("#storyboard-upload-input", str(HERE / "pins" / f"{VARIANT}_{sku}.png"))
+            pg.set_input_files("#storyboard-upload-input", str(HERE / "pins" / f"{variant}_{sku}.png"))
             pg.wait_for_timeout(5000)
             pg.fill("#storyboard-selector-title", row["title"])
             pg.locator("div[contenteditable=true]").first.click()
@@ -105,25 +110,26 @@ def post(sku, at=None):
         finally:
             pg.close()
     log = json.loads(LOG.read_text(encoding="utf-8")) if LOG.exists() else {}
-    log[sku] = {"pin": pin, "at": datetime.now().isoformat(timespec="seconds"), "variant": VARIANT}
+    log[key(sku, variant)] = {"pin": pin, "at": datetime.now().isoformat(timespec="seconds"), "variant": variant}
     LOG.write_text(json.dumps(log, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"OK {sku} → {pin}")
+    print(f"OK {variant}_{sku} → {pin}")
     return pin
 
 
 if __name__ == "__main__":
     done = json.loads(LOG.read_text(encoding="utf-8")) if LOG.exists() else {}
     if sys.argv[1:] == ["--next"]:
-        left = [s for s in ORDER if s not in done]
+        left = [s for s in ORDER["B"] if s not in done]
         if not left:
             print("모두 게시됨")
             sys.exit(0)
         post(left[0])
-    elif sys.argv[1] == "--schedule":  # --schedule 2026.10.17 → 남은 것 전부 그날부터 하루 1개씩 예약
+    elif sys.argv[1] == "--schedule":  # --schedule 2026.10.17 [A] → 그 시안의 남은 것 전부 그날부터 하루 1개씩 예약
         from datetime import timedelta
         day = datetime.strptime(sys.argv[2], "%Y.%m.%d")
-        for i, s in enumerate(x for x in ORDER if x not in done):
-            post(s, (day + timedelta(days=i)).strftime("%Y.%m.%d"))
+        v = sys.argv[3] if len(sys.argv) > 3 else "B"
+        for i, s in enumerate(x for x in ORDER[v] if key(x, v) not in done):
+            post(s, (day + timedelta(days=i)).strftime("%Y.%m.%d"), v)
     else:
         for s in sys.argv[1:]:
             print(f"SKIP {s} (이미 게시: {done[s]['pin']})") if s in done else post(s)
